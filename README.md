@@ -30,7 +30,7 @@ A abertura do arquivo é dada por:
 Em seguida, o arquivo é percorrido contando a quantidade de linhas e salvando em uma variável local, que é salva no ponteiro:
 ```
     printf("Contando as linhas\n");
-    while (fgets(buffer, 100, fp) != NULL) {
+    while (fgets(linha, 100, fp) != NULL) {
         numeroLinhas++;
     }
 
@@ -39,17 +39,9 @@ Em seguida, o arquivo é percorrido contando a quantidade de linhas e salvando e
 Com isso, a matriz pode ser criada:
 ```
     printf("%d linhas foram encontradas, alocando a matriz\n", numeroLinhas);
-    matrizArquivo = (int **)malloc(numeroLinhas * sizeof(int *));
-    if(matrizArquivo == NULL){
-        printf("Erro. Sem memoria suficiente");
-        exit(1);
-    }
+    matrizArquivo = new int*[numeroLinhas];
     for (int i = 0; i < numeroLinhas; i++) {
-        matrizArquivo[i] = (int *)malloc(4 * sizeof(int));
-        if(matrizArquivo[i] == NULL){
-            printf("Erro. Sem memoria suficiente");
-            exit(1);
-        }
+        matrizArquivo[i] = new int[4];
     }
     printf("Matriz alocada com sucesso!\n");
 ```
@@ -60,8 +52,8 @@ Para por fim, voltar ao inicio do arquivo e salvar os valores em tal matriz:
 
     printf("Lendo linha por linha e salvando na matriz\n");
     for (int i = 0; i < numeroLinhas; i++) {
-        fgets(buffer, 100, fp);
-        sscanf(buffer, "%d; %d; %d; %d;", &matrizArquivo[i][0], &matrizArquivo[i][1], &matrizArquivo[i][2], &matrizArquivo[i][3]);
+        fgets(linha, 100, fp);
+        sscanf(linha, "%d; %d; %d; %d;", &matrizArquivo[i][0], &matrizArquivo[i][1], &matrizArquivo[i][2], &matrizArquivo[i][3]);
     }
 
     printf("Fechando arquivo\n");
@@ -90,17 +82,9 @@ float** estimmarRollPitch(int **matrizArquivo, int numeroLinhas)
 Primeiramente, a matriz será alocada:
 ```
     printf("Alocando matriz para as estimacoes\n");
-    matrizEstimada = (float **)malloc(numeroLinhas * sizeof(float *));
-    if(matrizEstimada == NULL){
-        printf("Erro. Sem memoria suficiente");
-        exit(1);
-    }
+    matrizEstimada = new float*[numeroLinhas];
     for (int i = 0; i < numeroLinhas; i++) {
-        matrizEstimada[i] = (float *)malloc(3 * sizeof(float));
-        if(matrizEstimada[i] == NULL){
-            printf("Erro. Sem memoria suficiente");
-            exit(1);
-        }
+        matrizEstimada[i] = new float[4];
     }
     printf("Matriz alocada com sucesso! Iniciando calculos do Pitch e Roll\n");
 ```
@@ -115,7 +99,7 @@ E por fim, para cada linha, serão realizados os calculos e o valor do timeStamp
         matrizEstimada[i][0] = matrizArquivo[i][0];
 
         matrizEstimada[i][1] = atan2(-acel_y, sqrt(acel_x * acel_x + acel_z * acel_z)) * (180.0 / M_PI);
-        
+
         matrizEstimada[i][2] = atan2(acel_y, acel_z) * (180.0 / M_PI);
     }
     printf("Calculos completos\n");
